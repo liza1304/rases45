@@ -65,24 +65,52 @@ for i in range(1, 6):
 
 
 finish = False
-
-
+font.init()
+font2 = font.SysFont('Arial', 36)
+lose = font2.render("YOU LOSE", 1, (255, 255, 255))
+win = font2.render("YOU WIN", 1, (255, 255, 255))
+score = 0 
 while game:
-    window.blit(background, (0, 0))
-    car1.update_l()
-    car2.update_r()
-    car1.reset()
-    car2.reset()
-    balls.update()
-    balls.draw(window)
+    if finish != True:
+        window.blit(background, (0, 0))
+        car1.update_l()
+        car2.update_r()
+        car1.reset()
+        car2.reset()
+        balls.update()
+        balls.draw(window)
 
 
-    
-    
+        if sprite.spritecollide(car1, balls, False):
+            finish = True
+            window.blit(lose, (300, 250))
+        sprites_list = sprite.spritecollide(car1, balls, False)
+        for ball in sprites_list:
+            score += 1
+            ball = Enemy("ball.png", randint(80, 635), -40, 80, 50, randint(1, 5))
+            balls.add(ball)
+
+
+        if sprite.spritecollide(car2, balls, False):
+            finish = True
+            window.blit(lose, (300, 250))
+        sprites_list = sprite.spritecollide(car2, balls, False)
+        for ball in sprites_list:
+            score += 1
+            ball = Enemy("ball.png", randint(80, 635), -40, 80, 50, randint(1, 5))
+            balls.add(ball)
+
+        if score >= 3:  
+            finish = True 
+            window.blit(win, (300, 250))
+ 
+        if lost > 10:
+            finish = True 
+            window.blit(lose, (300, 250))
+             
     for e in event.get():
         if e.type == QUIT:
             game = False
-
 
 
     clock.tick(FPS)
